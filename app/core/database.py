@@ -16,10 +16,12 @@ if DATABASE_URL.startswith("postgres://"):
     DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
 
 # ✅ Create engine
-engine = create_engine(
-    DATABASE_URL,
-    echo=False
-)
+engine_kwargs = {"echo": False, "pool_pre_ping": True}
+if DATABASE_URL.startswith("postgresql"):
+    # Fail fast instead of hanging when the database host is unreachable.
+    engine_kwargs["connect_args"] = {"connect_timeout": 10}
+
+engine = create_engine(DATABASE_URL, **engine_kwargs)
 
 
 SessionLocal = sessionmaker(
