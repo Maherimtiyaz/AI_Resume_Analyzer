@@ -3,8 +3,8 @@ from unittest.mock import patch, MagicMock
 
 def test_upload_doc(client: TestClient):
     # Register and login to get token
-    client.post("/auth/register", params={"email": "doc@example.com", "password": "password"})
-    login_response = client.post("/auth/login", params={"email": "doc@example.com", "password": "password"})
+    client.post("/auth/register", json={"email": "doc@example.com", "password": "password"})
+    login_response = client.post("/auth/login", json={"email": "doc@example.com", "password": "password"})
     token = login_response.json()["access_token"]
 
     # Mock the process_document function to avoid actual Celery/Cloudinary/FAISS calls
